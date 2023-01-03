@@ -2,8 +2,6 @@
 // ** auto generated pixelshader **
 // ********************************
 
-#define SHADER_EDITOR_SWARM_COMPILE
-
 
 // Includes
 #include "common_ps_fxc.h"

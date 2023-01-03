@@ -51,7 +51,7 @@
 			{
 				"jackIn_00"
 				{
-					"iTarget_node"		"13"
+					"iTarget_node"		"12"
 					"iTarget_jack"		"0"
 				}
 				"jackIn_01"
@@ -101,18 +101,6 @@
 		"Node_005"
 		{
 			"iType"		"2010"
-			"pos_x"		"-339.970551"
-			"pos_y"		"-278.838318"
-			"size_x"		"80.000000"
-			"size_y"		"-17.000000"
-			"iPreview"		"0"
-			"iInline"		"1"
-			"szVMTString_num_strings"		"1"
-			"szVMTString_partial_00"		"\'EDITOR_SHADER\'\r\n{\r\n	\'$SHADERNAME\'	\'gauss_blur_5_x\'\r\n\r\n	\'$basetexture\'	\'_rt_fbquarter_0\'\r\n}"
-		}
-		"Node_006"
-		{
-			"iType"		"2010"
 			"pos_x"		"423.332336"
 			"pos_y"		"-416.715942"
 			"size_x"		"80.000000"
@@ -122,7 +110,7 @@
 			"szVMTString_num_strings"		"1"
 			"szVMTString_partial_00"		"\'unlitgeneric\'\r\n{\r\n	\'$basetexture\'	\'_rt_fullframefb\'\r\n	\'$additive\'		1\r\n}"
 		}
-		"Node_007"
+		"Node_006"
 		{
 			"iType"		"2011"
 			"pos_x"		"113.682846"
@@ -144,12 +132,12 @@
 				}
 				"jackIn_02"
 				{
-					"iTarget_node"		"8"
+					"iTarget_node"		"7"
 					"iTarget_jack"		"0"
 				}
 			}
 		}
-		"Node_008"
+		"Node_007"
 		{
 			"iType"		"2009"
 			"pos_x"		"-39.379333"
@@ -159,7 +147,7 @@
 			"iPreview"		"1"
 			"szRTName"		"_rt_FullFrameFB"
 		}
-		"Node_009"
+		"Node_008"
 		{
 			"iType"		"2004"
 			"pos_x"		"594.897278"
@@ -171,12 +159,12 @@
 			{
 				"jackIn_00"
 				{
-					"iTarget_node"		"11"
+					"iTarget_node"		"10"
 					"iTarget_jack"		"0"
 				}
 				"jackIn_01"
 				{
-					"iTarget_node"		"6"
+					"iTarget_node"		"5"
 					"iTarget_jack"		"0"
 				}
 			}
@@ -196,7 +184,7 @@
 			"iSrc_w"		"0"
 			"iSrc_h"		"0"
 		}
-		"Node_010"
+		"Node_009"
 		{
 			"iType"		"2002"
 			"pos_x"		"840.652588"
@@ -208,12 +196,12 @@
 			{
 				"jackIn_00"
 				{
-					"iTarget_node"		"9"
+					"iTarget_node"		"8"
 					"iTarget_jack"		"0"
 				}
 			}
 		}
-		"Node_011"
+		"Node_010"
 		{
 			"iType"		"2012"
 			"pos_x"		"332.495667"
@@ -225,12 +213,12 @@
 			{
 				"jackIn_00"
 				{
-					"iTarget_node"		"7"
+					"iTarget_node"		"6"
 					"iTarget_jack"		"0"
 				}
 				"jackIn_01"
 				{
-					"iTarget_node"		"8"
+					"iTarget_node"		"7"
 					"iTarget_jack"		"0"
 				}
 			}
@@ -268,7 +256,7 @@
 			"options_float_2"		"1.000000"
 			"iSceneDraw"		"0"
 		}
-		"Node_012"
+		"Node_011"
 		{
 			"iType"		"2012"
 			"pos_x"		"-139.545654"
@@ -323,7 +311,7 @@
 			"options_float_2"		"1.000000"
 			"iSceneDraw"		"0"
 		}
-		"Node_013"
+		"Node_012"
 		{
 			"iType"		"2004"
 			"pos_x"		"-126.738861"
@@ -335,12 +323,12 @@
 			{
 				"jackIn_00"
 				{
-					"iTarget_node"		"12"
+					"iTarget_node"		"11"
 					"iTarget_jack"		"0"
 				}
 				"jackIn_01"
 				{
-					"iTarget_node"		"5"
+					"iTarget_node"		"13"
 					"iTarget_jack"		"0"
 				}
 				"jackIn_02"
@@ -369,6 +357,18 @@
 			"flSrcUV_y"		"0.000000"
 			"iSrc_w"		"-1"
 			"iSrc_h"		"-1"
+		}
+		"Node_013"
+		{
+			"iType"		"2010"
+			"pos_x"		"-339.970551"
+			"pos_y"		"-278.838318"
+			"size_x"		"80.000000"
+			"size_y"		"-17.000000"
+			"iPreview"		"0"
+			"iInline"		"1"
+			"szVMTString_num_strings"		"1"
+			"szVMTString_partial_00"		"\'EDITOR_SHADER\'\r\n{\r\n	\'$SHADERNAME\'	\'gauss_blur_5_x\'\r\n\r\n	\'$basetexture\'	\'_rt_fbquarter_0\'\r\n}"
 		}
 	}
 }

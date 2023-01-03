@@ -2,8 +2,6 @@
 // ** auto generated vertexshader **
 // *********************************
 
-#define SHADER_EDITOR_SWARM_COMPILE
-
 
 // Includes
 #include "common_vs_fxc.h"

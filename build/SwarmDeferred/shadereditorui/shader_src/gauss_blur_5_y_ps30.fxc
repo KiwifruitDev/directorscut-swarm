@@ -2,8 +2,6 @@
 // ** auto generated pixelshader **
 // ********************************
 
-#define SHADER_EDITOR_SWARM_COMPILE
-
 
 // Includes
 #include "common_ps_fxc.h"
@@ -20,7 +18,7 @@ sampler _Sampler_00		: register( s0 );
 const float2 _g_TexelSize		: register( c16 );
 
 // Arrays
-static const float g_cArray_88[5] =
+static const float g_cArray_253[5] =
 {
 	float( 0.054489f ),
 	float( 0.244201f ),
@@ -52,7 +50,7 @@ PS_OUTPUT main( const PS_INPUT In )
 	{
 		_var1 = _var1 + _var2;
 		float4 _var4 = tex2D( _Sampler_00, _var1 ).rgba;
-		_var4 = _var4 * g_cArray_88[_var3];
+		_var4 = _var4 * g_cArray_253[_var3];
 		_var0 = _var0 + _var4;
 	}
 	Out.vColor_0 = _var0;

@@ -237,6 +237,8 @@ float CalcRangeFog( const float flProjPosZ, const float flFogEndOverRange, const
 {
 #if defined(SHADER_EDITOR_SWARM_COMPILE)
 	return min( flFogMaxDensity, saturate( flFogEndOverRange + ( distance( flEyePos, flWorldPos ) * flFogOORange ) ) );
+#elif defined(SHADER_EDITOR_2013_COMPILE)
+	return min( flFogMaxDensity, ( saturate( flProjPosZ * flFogOORange - flFogEndOverRange ) ) );
 #else
 #if !(defined(SHADER_MODEL_PS_1_1) || defined(SHADER_MODEL_PS_1_4) || defined(SHADER_MODEL_PS_2_0)) //Minimum requirement of ps2b
 	return min( flFogMaxDensity, ( saturate( 1.0 - (flFogEndOverRange - (flProjPosZ * flFogOORange)) ) ) );

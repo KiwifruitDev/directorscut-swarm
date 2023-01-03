@@ -70,10 +70,9 @@
 		}
 		"texsamp_0"
 		{
-			"sz_param"		"afsf"
-			"sz_fallback"		"texture_samples\cubemap_uffizi"
+			"sz_fallback"		"white"
 			"i_sampidx"		"0"
-			"i_texmode"		"0"
+			"i_texmode"		"6"
 			"i_cubemap"		"1"
 			"i_srgb"		"1"
 		}
