@@ -4,7 +4,7 @@ setlocal
 rem Use dynamic shaders to build .inc files only
 rem set dynamic_shaders=0
 rem == Setup path to nmake.exe, from vc 2005 common tools directory ==
-call "%VS100COMNTOOLS%vsvars32.bat"
+call "%VS120COMNTOOLS%vsvars32.bat"
 
 rem ================================
 rem ==== MOD PATH CONFIGURATIONS ===
@@ -14,16 +14,17 @@ rem == Note that this path needs does not support long file/directory names ==
 rem == So instead of a path such as "C:\Program Files\Steam\steamapps\mymod" ==
 rem == you need to find the 8.3 abbreviation for the directory name using 'dir /x' ==
 rem == and set the directory to something like C:\PROGRA~2\Steam\steamapps\sourcemods\mymod ==
-set GAMEDIR=E:\STEAMA~1\SOURCE~1\shelter
+set GAMEDIR=D:\MODS\DirectorsCut\build\SwarmDeferred
 
 rem == Set the relative path to SourceSDK\bin\orangebox\bin ==
 rem == As above, this path does not support long directory names or spaces ==
 rem == e.g. ..\..\..\..\..\PROGRA~2\Steam\steamapps\<USER NAME>\sourcesdk\bin\orangebox\bin ==
-set SDKBINDIR=..\..\..\..\..\..\STEAMA~1\common\ALIENS~1\bin
+rem DXCHANGE: "ALIENS" is a junction (symbolic link) to "Alien Swarm"
+set SDKBINDIR=..\..\..\..\..\SteamLibrary\steamapps\common\ALIENS\bin
 
 rem ==  Set the Path to your mods root source code ==
 rem this should already be correct, accepts relative paths only!
-set SOURCEDIR=..\..
+set SOURCEDIR=..\..\..\src
 
 rem ==== MOD PATH CONFIGURATIONS END ===
 rem ====================================
@@ -32,7 +33,7 @@ rem ====================================
 
 
 
-set TTEXE=..\..\devtools\bin\timeprecise.exe
+set TTEXE=%SOURCEDIR%\devtools\bin\timeprecise.exe
 if not exist %TTEXE% goto no_ttexe
 goto no_ttexe_end
 

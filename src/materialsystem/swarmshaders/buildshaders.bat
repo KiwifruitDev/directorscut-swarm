@@ -1,6 +1,6 @@
 @echo off
 
-set TTEXE=..\..\devtools\bin\timeprecise.exe
+set TTEXE=%SOURCEDIR%\devtools\bin\timeprecise.exe
 if not exist %TTEXE% goto no_ttexe
 goto no_ttexe_end
 
@@ -23,7 +23,7 @@ setlocal
 set arg_filename=%1
 set shadercompilecommand=shadercompile.exe
 set targetdir=shaders
-set SrcDirBase=..\..
+set SrcDirBase=%SOURCEDIR%
 set shaderDir=shaders
 set SDKArgs=
 set SHADERINCPATH=vshtmp9/... fxctmp9/...
@@ -39,7 +39,7 @@ if /i "%6" == "-dx9_30" goto dx_sdk_dx9_30
 goto dx_sdk_end
 :dx_sdk_dx9_30
 			set DIRECTX_SDK_VER=pc09.30
-			set DIRECTX_SDK_BIN_DIR=dx10sdk\utilities\dx9_30
+			set DIRECTX_SDK_BIN_DIR=dx9sdk\utilities
 			goto dx_sdk_end
 :dx_sdk_end
 
