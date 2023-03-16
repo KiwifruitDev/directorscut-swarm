@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2001, Valve LLC, All rights reserved. ============
+//========= Copyright ï¿½ 1996-2001, Valve LLC, All rights reserved. ============
 //
 // Purpose:		Player for SDK
 //
@@ -189,11 +189,11 @@ void CSDK_Player::PostThink()
 
 void CSDK_Player::GiveDefaultItems()
 {
-	CBasePlayer::GiveAmmo( 30,	"pistol");
-	CBasePlayer::GiveAmmo( 60,	"mp5");
+	//CBasePlayer::GiveAmmo( 30,	"pistol");
+	//CBasePlayer::GiveAmmo( 60,	"mp5");
 
-	GiveNamedItem( "weapon_pistol" );
-	GiveNamedItem( "weapon_mp5" );
+	//GiveNamedItem( "weapon_pistol" );
+	//GiveNamedItem( "weapon_mp5" );
 }
 
 void CSDK_Player::CreateViewModel( int index /*=0*/ )

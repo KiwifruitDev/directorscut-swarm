@@ -133,7 +133,7 @@ void CSDK_Background_Movie::Update()
 		if ( nGameState != m_nLastGameState )
 		{
 #ifdef ASW_BINK_MOVIES
-			SetCurrentMovie( "media/BGFX_01.bik" );
+			//SetCurrentMovie( "media/BGFX_01.bik" );
 #else
 			SetCurrentMovie( "media/test.avi" );
 #endif
@@ -146,7 +146,7 @@ void CSDK_Background_Movie::Update()
 		if ( nGameState != m_nLastGameState )
 		{
 #ifdef ASW_BINK_MOVIES
-			SetCurrentMovie( "media/BG_02.bik" );
+			//SetCurrentMovie( "media/BG_02.bik" );
 #else
 			SetCurrentMovie( "media/test.avi" );
 #endif

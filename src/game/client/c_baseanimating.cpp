@@ -1436,7 +1436,15 @@ void C_BaseAnimating::CalcBoneMerge( CStudioHdr *hdr, int boneMask, CBoneBitList
 //-----------------------------------------------------------------------------
 // Purpose:	move position and rotation transforms into global matrices
 //-----------------------------------------------------------------------------
-void C_BaseAnimating::BuildTransformations( CStudioHdr *hdr, Vector *pos, Quaternion *q, const matrix3x4_t &cameraTransform, int boneMask, CBoneBitList &boneComputed )
+void C_BaseAnimating::BuildTransformations(CStudioHdr* hdr, Vector* pos, Quaternion* q, const matrix3x4_t& cameraTransform, int boneMask, CBoneBitList& boneComputed)
+{
+	Vector dummyVec[MAXSTUDIOBONES];
+	Quaternion dummyQuat[MAXSTUDIOBONES];
+	BuildTransformations(hdr, pos, q, cameraTransform, boneMask, boneComputed, false, dummyVec, dummyQuat);
+}
+
+// DIRECTORSCUT: https://steamcommunity.com/app/211/discussions/1/540739319616280118/
+void C_BaseAnimating::BuildTransformations(CStudioHdr* hdr, Vector* pos, Quaternion* q, const matrix3x4_t& cameraTransform, int boneMask, CBoneBitList& boneComputed, bool leaveoutbonecalc, Vector* addpos, Quaternion* addq)
 {
 	VPROF_BUDGET( "C_BaseAnimating::BuildTransformations", ( !g_bInThreadedBoneSetup ) ? VPROF_BUDGETGROUP_CLIENT_ANIMATION : "Client_Animation_Threaded" );
 
@@ -1505,8 +1513,18 @@ void C_BaseAnimating::BuildTransformations( CStudioHdr *hdr, Vector *pos, Quater
 		{
 			continue;
 		}
-		else
+		// DIRECTORSCUT: This probably breaks things...
+		//else
 		{
+			if (leaveoutbonecalc)
+			{
+				// use override bone positions
+				pos[i].x += addpos[i].y;
+				pos[i].y += addpos[i].y;
+				pos[i].z += addpos[i].z;
+				QuaternionMult(q[i], addq[i], q[i]);
+			}
+
 			// animate all non-simulated bones
 			QuaternionMatrix( q[i], pos[i], bonematrix );
 
@@ -2724,7 +2742,14 @@ bool C_BaseAnimating::InThreadedBoneSetup()
 	return g_bInThreadedBoneSetup;
 }
 
-bool C_BaseAnimating::SetupBones( matrix3x4a_t *pBoneToWorldOut, int nMaxBones, int boneMask, float currentTime )
+bool C_BaseAnimating::SetupBones(matrix3x4a_t* pBoneToWorldOut, int nMaxBones, int boneMask, float currentTime)
+{
+	Vector dummyVec[MAXSTUDIOBONES];
+	Quaternion dummyQuat[MAXSTUDIOBONES];
+	return SetupBones(pBoneToWorldOut, nMaxBones, boneMask, currentTime, false, dummyVec, dummyQuat);
+}
+
+bool C_BaseAnimating::SetupBones(matrix3x4a_t* pBoneToWorldOut, int nMaxBones, int boneMask, float currentTime, bool leaveoutbonecalc, Vector* addpos, Quaternion* addq)
 {
 	VPROF_BUDGET( "C_BaseAnimating::SetupBones", ( !g_bInThreadedBoneSetup ) ? VPROF_BUDGETGROUP_CLIENT_ANIMATION : "Client_Animation_Threaded" );
 
@@ -2969,7 +2994,7 @@ bool C_BaseAnimating::SetupBones( matrix3x4a_t *pBoneToWorldOut, int nMaxBones, 
 			}
 #endif
 
-			BuildTransformations( hdr, pos, q, parentTransform, bonesMaskNeedRecalc, boneComputed );
+			BuildTransformations(hdr, pos, q, parentTransform, bonesMaskNeedRecalc, boneComputed, leaveoutbonecalc, addpos, addq);
 
 #ifdef DEMOPOLISH_ENABLED
 			// Override bones?

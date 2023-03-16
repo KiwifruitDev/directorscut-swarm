@@ -8,7 +8,7 @@
 
 CSDK_Logo_Panel::CSDK_Logo_Panel(vgui::Panel *parent, const char *name) : vgui::ImagePanel(parent, name)
 {
-	SetImage( "../console/startup_loading" );
+	SetImage( "../console/startup_loading_dx" );
 	SetShouldScaleImage(true);
 }
 

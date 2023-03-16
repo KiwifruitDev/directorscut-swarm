@@ -1,6 +1,6 @@
 @echo off
 
-set TTEXE=%SOURCEDIR%\devtools\bin\timeprecise.exe
+set TTEXE=..\..\devtools\bin\timeprecise.exe
 if not exist %TTEXE% goto no_ttexe
 goto no_ttexe_end
 
@@ -23,7 +23,7 @@ setlocal
 set arg_filename=%1
 set shadercompilecommand=shadercompile.exe
 set targetdir=shaders
-set SrcDirBase=%SOURCEDIR%
+set SrcDirBase=..\..
 set shaderDir=shaders
 set SDKArgs=
 set SHADERINCPATH=vshtmp9/... fxctmp9/...
@@ -39,7 +39,7 @@ if /i "%6" == "-dx9_30" goto dx_sdk_dx9_30
 goto dx_sdk_end
 :dx_sdk_dx9_30
 			set DIRECTX_SDK_VER=pc09.30
-			set DIRECTX_SDK_BIN_DIR=dx9sdk\utilities
+			set DIRECTX_SDK_BIN_DIR=dx10sdk\utilities\dx9_30
 			goto dx_sdk_end
 :dx_sdk_end
 
@@ -70,7 +70,7 @@ REM MOD ARGS - look for -game or the vproject environment variable
 REM ****************
 :set_mod_args
 
-if not exist %SDKBINDIR%\shadercompile.exe goto NoShaderCompile
+if not exist "%SDKBINDIR%\shadercompile.exe" goto NoShaderCompile
 set ChangeToDir=%SDKBINDIR%
 
 if /i "%4" NEQ "-source" goto NoSourceDirSpecified

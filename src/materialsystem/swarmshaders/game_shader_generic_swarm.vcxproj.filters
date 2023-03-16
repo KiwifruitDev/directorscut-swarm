@@ -114,6 +114,7 @@
     <ClCompile Include="screenspace_combine.cpp">
       <Filter>Source Files\lighting</Filter>
     </ClCompile>
+    <ClCompile Include="pbr_dx9.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseVSShader.h">
@@ -185,6 +186,7 @@
     <ClInclude Include="defpass_composite.h">
       <Filter>Source Files\scene</Filter>
     </ClInclude>
+    <ClInclude Include="pbr_common_ps2_3_x.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\..\dx9sdk\lib\d3dx9.lib">

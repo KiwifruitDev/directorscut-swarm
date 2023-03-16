@@ -1,4 +1,4 @@
-//===== Copyright © 1996-2005, Valve Corporation, All rights reserved. ======//
+//===== Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: 
 //
@@ -62,8 +62,7 @@
 #define USE_MONITORS
 #endif
 
-
-
+#include "directorscut.h"
 	
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -710,6 +709,9 @@ void CViewRender::SetUpView()
 
 	// give the toolsystem a chance to override the view
 	ToolFramework_SetupEngineView( view.origin, view.angles, view.fov );
+	
+	// DXCHANGE: Allow the imgui handler to override the view
+	DirectorsCutGameSystem().SetupEngineView(view.origin, view.angles, view.fov);
 
 	if ( engine->IsPlayingDemo() )
 	{

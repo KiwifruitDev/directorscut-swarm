@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2008, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2008, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -425,7 +425,7 @@ void LoadingProgress::SetupControlStates()
 			int screenWide, screenTall;
 			surface()->GetScreenSize( screenWide, screenTall );
 			char filename[MAX_PATH];
-			V_snprintf( filename, sizeof( filename ), "console/background01" ); // TODO: engine->GetStartupImage( filename, sizeof( filename ), screenWide, screenTall );
+			V_snprintf( filename, sizeof( filename ), "console/dxbackground" ); // TODO: engine->GetStartupImage( filename, sizeof( filename ), screenWide, screenTall );
 			m_pBGImage->SetImage( CFmtStr( "../%s", filename ) );
 		}
 
@@ -566,12 +566,13 @@ void LoadingProgress::SetupPoster( void )
 		int screenWide, screenTall;
 		surface()->GetScreenSize( screenWide, screenTall );
 		float aspectRatio = (float)screenWide/(float)screenTall;
-		bool bIsWidescreen = aspectRatio >= 1.5999f;
+		//bool bIsWidescreen = aspectRatio >= 1.5999f;
 #else
 		static ConVarRef mat_xbox_iswidescreen( "mat_xbox_iswidescreen" );
 		bool bIsWidescreen = mat_xbox_iswidescreen.GetBool();
 #endif
-		const char *pszPosterImage;
+		const char *pszPosterImage = "../console/dxbackground";
+		/*
 		int nChosenLoadingImage = RandomInt( 1, 4 );
 		switch( nChosenLoadingImage )
 		{
@@ -581,6 +582,7 @@ void LoadingProgress::SetupPoster( void )
 			case 4:
 			default: pszPosterImage = ( m_bFullscreenPoster && bIsWidescreen ) ? "swarm/loading/BGFX04_wide" : "swarm/loading/BGFX04"; break;
 		}
+		*/
 
 		// if the image was cached this will just hook it up, otherwise it will load it
 		pPoster->SetImage( pszPosterImage );

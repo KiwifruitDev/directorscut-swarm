@@ -208,7 +208,7 @@ CBaseModPanel::CBaseModPanel(): BaseClass(0, "CBaseModPanel"),
 	m_iBackgroundImageID = -1;
 	m_iProductImageID = -1;
 
-	m_backgroundMusic = "Misc.MainUI";
+	m_backgroundMusic = "";
 	m_nBackgroundMusicGUID = 0;
 
 	m_nProductImageWide = 0;
@@ -1825,13 +1825,13 @@ void CBaseModPanel::ApplySchemeSettings(IScheme *pScheme)
 	int screenWide, screenTall;
 	surface()->GetScreenSize( screenWide, screenTall );
 
-	char filename[MAX_PATH];
-	V_snprintf( filename, sizeof( filename ), "VGUI/swarm/loading/BGFX01" ); // TODO: engine->GetStartupImage( filename, sizeof( filename ), screenWide, screenTall );
+	char* filename = = "console/dxbackground"; //[MAX_PATH];
+	//V_snprintf( filename, sizeof( filename ), "VGUI/swarm/loading/BGFX01" ); // TODO: engine->GetStartupImage( filename, sizeof( filename ), screenWide, screenTall );
 	m_iBackgroundImageID = surface()->CreateNewTextureID();
 	surface()->DrawSetTextureFile( m_iBackgroundImageID, filename, true, false );
 
 	m_iProductImageID = surface()->CreateNewTextureID();
-	surface()->DrawSetTextureFile( m_iProductImageID, "console/startup_loading", true, false );
+	surface()->DrawSetTextureFile( m_iProductImageID, "console/startup_loading_dx", true, false );
 
 	// need these to be anchored now, can't come into existence during load
 	PrecacheLoadingTipIcons();
@@ -1857,6 +1857,7 @@ void CBaseModPanel::ApplySchemeSettings(IScheme *pScheme)
 	m_nProductImageWide = vgui::scheme()->GetProportionalScaledValue( logoW );
 	m_nProductImageTall = vgui::scheme()->GetProportionalScaledValue( logoH );
 
+	/*
 	if ( aspectRatio >= 1.6f )
 	{
 		// use the widescreen version
@@ -1866,6 +1867,9 @@ void CBaseModPanel::ApplySchemeSettings(IScheme *pScheme)
 	{
 		Q_snprintf( m_szFadeFilename, sizeof( m_szFadeFilename ), "materials/console/%s_widescreen.vtf", "SwarmSelectionScreen" );
 	}
+	*/
+
+	Q_snprintf( m_szFadeFilename, sizeof( m_szFadeFilename ), "materials/console/dxbackground.vtf" );
 
 	// TODO: GetBackgroundMusic
 #if 0

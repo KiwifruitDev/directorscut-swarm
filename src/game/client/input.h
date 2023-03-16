@@ -1,4 +1,4 @@
-//===== Copyright © 1996-2005, Valve Corporation, All rights reserved. ======//
+//===== Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: 
 //
@@ -240,7 +240,9 @@ protected:
 			// Is the 3rd person camera using the mouse?
 			m_fCameraInterceptingMouse = 0;
 			// Are we in 3rd person view?
-			m_fCameraInThirdPerson = true;
+			// DXCHANGE: I don't know why ASW Deferred defaults to third person
+			// This has been changed to false to avoid issues with the camera
+			m_fCameraInThirdPerson = false;
 			// Should we move view along with mouse?
 			m_fCameraMovingWithMouse = 0;
 			// What is the current camera offset from the view origin?

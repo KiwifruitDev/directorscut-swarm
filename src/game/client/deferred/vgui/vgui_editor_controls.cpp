@@ -60,6 +60,7 @@ void CVGUILightEditor_Controls::PerformLayout()
 {
 	BaseClass::PerformLayout();
 
+	/*
 	int sw, sh;
 	engine->GetScreenSize( sw, sh );
 
@@ -67,6 +68,7 @@ void CVGUILightEditor_Controls::PerformLayout()
 	GetSize( w, h );
 
 	SetPos( 5, sh / 2 - h / 2 );
+	*/
 }
 
 void CVGUILightEditor_Controls::OnRadioButtonChecked( Panel *panel )
@@ -77,7 +79,10 @@ void CVGUILightEditor_Controls::OnRadioButtonChecked( Panel *panel )
 
 	Assert( iSubPos >= 0 && iSubPos < CLightingEditor::EDITORINTERACTION_COUNT );
 
-	GetLightingEditor()->SetEditorInteractionMode( (CLightingEditor::EDITORINTERACTION_MODE)iSubPos );
+	//GetLightingEditor()->SetEditorInteractionMode( (CLightingEditor::EDITORINTERACTION_MODE)iSubPos );
+	ConVar* deferred_lighteditor_operation = cvar->FindVar( "deferred_lighteditor_operation" );
+	if ( deferred_lighteditor_operation )
+		deferred_lighteditor_operation->SetValue( iSubPos );
 }
 
 void CVGUILightEditor_Controls::OnCheckButtonChecked( Panel *panel )

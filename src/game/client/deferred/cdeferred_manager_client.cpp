@@ -5,6 +5,7 @@
 #include "materialsystem/imaterialvar.h"
 #include "filesystem.h"
 #include "deferred/deferred_shared_common.h"
+#include "directorscut.h"
 
 #include "vgui_controls/messagebox.h"
 
@@ -66,7 +67,11 @@ void CopyDev()
 			char filepath_src[MAX_PATH];
 			char filepath_dst[MAX_PATH];
 			Q_snprintf( filepath_src, sizeof( filepath_src ), "%s\\shaders\\fxc\\%s.vcs\0", pszGameDir, filename );
+#ifdef DX_UNIVERSE > 2
+			Q_snprintf( filepath_dst, sizeof( filepath_dst ), "%s\\..\\platform\\shaders\\fxc\\%s.vcs\0", pszGameDir, filename );
+#else
 			Q_snprintf( filepath_dst, sizeof( filepath_dst ), "%s\\common\\alien swarm\\platform\\shaders\\fxc\\%s.vcs\0", steamappsPath, filename );
+#endif
 			Q_FixSlashes( filepath_src );
 			Q_FixSlashes( filepath_dst );
 

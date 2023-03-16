@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -760,7 +760,8 @@ void CInput::CAM_ToOrthographic(void)
 	ASSERT_LOCAL_PLAYER_RESOLVABLE();
 	PerUserInput_t &user = GetPerUser();
 	user.m_fCameraInThirdPerson = false;
-	user.m_CameraIsOrthographic = true;
+	// DXCHANGE: Toggle orthographic mode
+	user.m_CameraIsOrthographic = !user.m_CameraIsOrthographic;
 	user.m_nCamCommand = 0;
 }
 
@@ -954,7 +955,7 @@ static ConCommand firstperson( "firstperson", Cmd_CAM_ToFirstPerson, "Switch to 
 #endif
 static ConCommand thirdperson_mayamode( "thirdperson_mayamode", ::CAM_ToThirdPerson_MayaMode, "Switch to thirdperson Maya-like camera controls.", FCVAR_CHEAT );
 static ConCommand thirdpersonshoulder( "thirdpersonshoulder", Cmd_CAM_ToThirdPersonShoulder, "Switch to thirdperson-shoulder camera." );
-static ConCommand camortho( "camortho", Cmd_CAM_ToOrthographic, "Switch to orthographic camera.", FCVAR_CHEAT );
+static ConCommand camortho( "camortho", Cmd_CAM_ToOrthographic, "Toggle orthographic camera.", FCVAR_CHEAT );
 static ConCommand startcammousemove( "+cammousemove",::CAM_StartMouseMove);
 static ConCommand endcammousemove( "-cammousemove",::CAM_EndMouseMove);
 static ConCommand startcamdistance( "+camdistance", ::CAM_StartDistance );

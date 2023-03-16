@@ -14,7 +14,7 @@ FontTestPanel::FontTestPanel(vgui::Panel *parent, const char *name) :
 {	
 	for (int i=0;i<ASW_FONT_TEST_LABELS;i++)
 	{
-		m_pLabel[i] = new vgui::Label(this, "FontLabel", "Alien Swarm: 12345 MEOW");
+		m_pLabel[i] = new vgui::Label(this, "FontLabel", "Director's Cut: 12345 MEOW");
 		m_pLabel[i]->SetContentAlignment(vgui::Label::a_northwest);
 	}
 	SetMouseInputEnabled(true);

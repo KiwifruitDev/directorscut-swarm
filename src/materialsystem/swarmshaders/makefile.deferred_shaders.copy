@@ -29,3 +29,5 @@ debug_shadow_ortho_ps30.fxc-----debug_shadow_ortho_ps30
 debug_lighting_ctrl_ps30.fxc-----debug_lighting_ctrl_ps30
 debug_radiosity_grid_ps30.fxc-----debug_radiosity_grid_ps30
 debug_radiosity_grid_vs30.fxc-----debug_radiosity_grid_vs30
+pbr_vs30.fxc-----pbr_vs30
+pbr_ps30.fxc-----pbr_ps30

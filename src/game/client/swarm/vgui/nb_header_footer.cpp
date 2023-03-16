@@ -137,6 +137,7 @@ void CASW_Background_Movie::Update()
 		}
 		if ( nGameState != m_nLastGameState && !( nGameState == ASW_GS_LAUNCHING || nGameState == ASW_GS_INGAME ) )
 		{
+			/*
 			const char *pFilename = NULL;
 #ifdef ASW_BINK_MOVIES
 			if ( ASWGameRules()->GetGameState() >= ASW_GS_DEBRIEF )
@@ -169,6 +170,7 @@ void CASW_Background_Movie::Update()
 			{
 				SetCurrentMovie( pFilename );
 			}
+			*/
 		}
 		m_nLastGameState = nGameState;
 	}
@@ -178,7 +180,7 @@ void CASW_Background_Movie::Update()
 		if ( nGameState != m_nLastGameState )
 		{
 #ifdef ASW_BINK_MOVIES
-			SetCurrentMovie( "media/BG_02.bik" );
+			//SetCurrentMovie( "media/BG_02.bik" );
 #else
 			SetCurrentMovie( "media/test.avi" );
 #endif

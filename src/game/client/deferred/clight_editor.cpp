@@ -301,9 +301,17 @@ void CLightingEditor::RenderHelpers()
 {
 	if ( !IsAnythingSelected() )
 		return;
+	
+	EDITORINTERACTION_MODE mode = GetEditorInteractionMode();
 
-	switch ( GetEditorInteractionMode() )
+	switch ( mode )
 	{
+	case EDITORINTERACTION_UNIVERSAL:
+		{
+			RenderRotate();
+			RenderTranslate();
+		}
+		break;
 	case EDITORINTERACTION_TRANSLATE:
 			RenderTranslate();
 		break;
@@ -322,9 +330,9 @@ void CLightingEditor::RenderTranslate()
 
 	const int iSubDiv = 16;
 	const float flLengthBase = 16.0f + ( bMultiSelected ? LIGHT_BOX_SIZE : 0 );
-	const float flLengthTip = 8.0f;
-	const float flRadiusBase = 1.2f;
-	const float flRadiusTip = 4.0f;
+	const float flLengthTip = 4.0f;
+	const float flRadiusBase = 1.0f;
+	const float flRadiusTip = 2.5f;
 	const float flAngleStep = 360.0f / iSubDiv;
 	const float flOffset = bMultiSelected ? 0 : LIGHT_BOX_SIZE;
 
@@ -344,9 +352,9 @@ void CLightingEditor::RenderTranslate()
 
 	Vector center = GetSelectionCenter();
 
-	for ( int iDir = 0; iDir < 3; iDir++ )
+	for ( int i = 0; i < 3; i++ )
 	{
-		Vector fwd = directions[ iDir ];
+		Vector fwd = directions[ i ];
 		QAngle ang;
 
 		VectorAngles( fwd, ang );
@@ -359,9 +367,9 @@ void CLightingEditor::RenderTranslate()
 		Vector cUp, nUp;
 		Vector pos, tmp0, tmp1, tmp2;
 
-		Vector colHigh = colors[ iDir ];
+		Vector colHigh = colors[ i ];
 
-		if ( GetCurrentSelectedAxis() == EDITORAXIS_FIRST + iDir )
+		if ( GetCurrentSelectedAxis() == EDITORAXIS_FIRST + i )
 			colHigh = SELECTED_AXIS_COLOR;
 
 		Vector colLow = colHigh * flColorLowScale;
@@ -468,7 +476,7 @@ void CLightingEditor::RenderTranslate()
 		mB.End();
 		pMesh->Draw();
 
-		if ( GetCurrentSelectedAxis() == EDITORAXIS_FIRST_PLANE + iDir )
+		if ( GetCurrentSelectedAxis() == EDITORAXIS_FIRST_PLANE + i )
 		{
 			const int index = GetCurrentSelectedAxis() - EDITORAXIS_FIRST_PLANE;
 			const float flPlaneSize = LIGHT_BOX_SIZE + 12.0f;
@@ -523,12 +531,12 @@ void CLightingEditor::RenderTranslate()
 
 void CLightingEditor::RenderRotate()
 {
-	CMatRenderContextPtr pRenderContext( materials );
-	pRenderContext->Bind( m_matHelper );
-
+	CMatRenderContextPtr pRenderContext(materials);
+	pRenderContext->Bind(m_matHelper);
+	
 	const int iSubDiv = 64.0f;
 	const float flRadius = 32.0f;
-	const float flThickness = 4.0f;
+	const float flThickness = 1.0f;
 	const float flRotationStep = 360.0f / iSubDiv;
 
 	Vector center = GetSelectionCenter();
@@ -557,11 +565,11 @@ void CLightingEditor::RenderRotate()
 		{ 0, 2 },
 	};
 
-	for ( int iDir = 0; iDir < 3; iDir++ )
+	for ( int i = 0; i < 3; i++ )
 	{
-		colHigh = colors[ iDir ];
+		colHigh = colors[ i ];
 
-		if ( iDir == GetCurrentSelectedAxis() - EDITORAXIS_FIRST )
+		if ( i == GetCurrentSelectedAxis() - EDITORAXIS_FIRST_ROTATION )
 			colHigh = SELECTED_AXIS_COLOR;
 
 		colLow = colHigh * flColorLowScale;
@@ -571,12 +579,12 @@ void CLightingEditor::RenderRotate()
 		CMeshBuilder mB;
 		mB.Begin( pMesh, MATERIAL_QUADS, 2 * iSubDiv );
 
-		VectorAngles( reinterpretRoll[ iLookup[iDir][0] ],
-			reinterpretRoll[ iLookup[iDir][1] ],
+		VectorAngles( reinterpretRoll[ iLookup[i][0] ],
+			reinterpretRoll[ iLookup[i][1] ],
 			angCur );
 		angNext = angCur;
 
-		float flCurrentRadius = flRadius - iDir * 0.275f;
+		float flCurrentRadius = flRadius - i * 0.275f;
 
 		for ( int iStep = 0; iStep < iSubDiv; iStep++ )
 		{
@@ -636,9 +644,7 @@ QAngle CLightingEditor::GetViewAngles()
 
 void CLightingEditor::UpdateCurrentSelectedAxis( int x, int y )
 {
-	if ( !IsAnythingSelected() ||
-		GetEditorInteractionMode() != EDITORINTERACTION_TRANSLATE &&
-		GetEditorInteractionMode() != EDITORINTERACTION_ROTATE )
+	if ( !IsAnythingSelected() || GetEditorInteractionMode() < EDITORINTERACTION_FIRST_GIZMO )
 	{
 		SetCurrentSelectedAxis( EDITORAXIS_NONE );
 		return;
@@ -659,28 +665,28 @@ void CLightingEditor::UpdateCurrentSelectedAxis( int x, int y )
 	{
 	case EDITORINTERACTION_TRANSLATE:
 		{
-			const float flBoxLength = 24.0f + LIGHT_BOX_SIZE;
-			const float flBoxThick = 4.0f;
+			const float flBoxLength = 24.0f + 1.0f;
+			const float flBoxThick = 1.0f;
 
 			Vector boxes[3][2] = {
-				{ Vector( LIGHT_BOX_SIZE, -flBoxThick, -flBoxThick ),
-						Vector( flBoxLength, flBoxThick, flBoxThick ) },
-				{ Vector( -flBoxThick, LIGHT_BOX_SIZE, -flBoxThick ),
-						Vector( flBoxThick, flBoxLength, flBoxThick ) },
-				{ Vector( -flBoxThick, -flBoxThick, LIGHT_BOX_SIZE ),
-						Vector( flBoxThick, flBoxThick, flBoxLength ) },
+				{ Vector(1.0f, -flBoxThick, -flBoxThick),
+						Vector(flBoxLength, flBoxThick, flBoxThick) },
+				{ Vector(-flBoxThick, 1.0f, -flBoxThick),
+						Vector(flBoxThick, flBoxLength, flBoxThick) },
+				{ Vector(-flBoxThick, -flBoxThick, 1.0f),
+						Vector(flBoxThick, flBoxThick, flBoxLength) },
 			};
 
 			float flLastFrac = MAX_TRACE_LENGTH;
 
-			for ( int i = 0; i < 3; i++ )
+			for (int i = 0; i < 3; i++)
 			{
 				CBaseTrace trace;
-				if ( IntersectRayWithBox( pickerRay,
+				if (IntersectRayWithBox(pickerRay,
 					center + boxes[i][0], center + boxes[i][1],
-					0.5f, &trace ) )
+					0.5f, &trace))
 				{
-					if ( trace.fraction > flLastFrac )
+					if (trace.fraction > flLastFrac)
 						continue;
 
 					flLastFrac = trace.fraction;
@@ -688,24 +694,24 @@ void CLightingEditor::UpdateCurrentSelectedAxis( int x, int y )
 				}
 			}
 
-			if ( idealAxis == EDITORAXIS_SCREEN )
+			if (idealAxis == EDITORAXIS_SCREEN)
 			{
-				const float flPlaneSize = LIGHT_BOX_SIZE + 12.0f;
+				const float flPlaneSize = 1.0f + 12.0f;
 
 				Vector planes[3][2] = {
-					{ Vector( 0, 0, -1 ), Vector( flPlaneSize, flPlaneSize, 1 ) },
-					{ Vector( 0, -1, 0 ), Vector( flPlaneSize, 1, flPlaneSize ) },
-					{ Vector( -1, 0, 0 ), Vector( 1, flPlaneSize, flPlaneSize ) },
+					{ Vector(0, 0, -1), Vector(flPlaneSize, flPlaneSize, 1) },
+					{ Vector(0, -1, 0), Vector(flPlaneSize, 1, flPlaneSize) },
+					{ Vector(-1, 0, 0), Vector(1, flPlaneSize, flPlaneSize) },
 				};
 
-				for ( int i = 0; i < 3; i++ )
+				for (int i = 0; i < 3; i++)
 				{
 					CBaseTrace trace;
-					if ( IntersectRayWithBox( pickerRay,
+					if (IntersectRayWithBox(pickerRay,
 						center + planes[i][0], center + planes[i][1],
-						0.5f, &trace ) )
+						0.5f, &trace))
 					{
-						if ( trace.fraction > flLastFrac )
+						if (trace.fraction > flLastFrac)
 							continue;
 
 						flLastFrac = trace.fraction;
@@ -719,15 +725,15 @@ void CLightingEditor::UpdateCurrentSelectedAxis( int x, int y )
 		{
 			const int iSubDiv = 32.0f;
 			const float flRadius = 32.0f;
-			const float flMaxDist = 4.0f * 4.0f;
+			const float flMaxDist = 1.0f;
 			const float flRotationStep = 360.0f / iSubDiv;
 
 			float flBestViewDist = MAX_TRACE_LENGTH;
 
 			Vector reinterpretRoll[3];
 
-			AngleVectors( orientation,
-				&reinterpretRoll[0], &reinterpretRoll[1], &reinterpretRoll[2] );
+			AngleVectors(orientation,
+				&reinterpretRoll[0], &reinterpretRoll[1], &reinterpretRoll[2]);
 
 			QAngle angCur, angNext;
 			int iLookup[3][2] = {
@@ -736,49 +742,169 @@ void CLightingEditor::UpdateCurrentSelectedAxis( int x, int y )
 				{ 0, 2 },
 			};
 
-			for ( int iDir = 0; iDir < 3; iDir++ )
+			for (int i = 0; i < 3; i++)
 			{
 				float flBestDist = MAX_TRACE_LENGTH;
 
-				VectorAngles( reinterpretRoll[ iLookup[iDir][0] ],
-					reinterpretRoll[ iLookup[iDir][1] ],
-					angCur );
+				VectorAngles(reinterpretRoll[iLookup[i][0]],
+					reinterpretRoll[iLookup[i][1]],
+					angCur);
 				angNext = angCur;
 
-				for ( int iStep = 0; iStep < iSubDiv; iStep++ )
+				for (int iStep = 0; iStep < iSubDiv; iStep++)
 				{
 					angNext.z += flRotationStep;
 
 					Vector cUp, nUp;
 
-					AngleVectors( angCur, NULL, NULL, &cUp );
-					AngleVectors( angNext, NULL, NULL, &nUp );
+					AngleVectors(angCur, NULL, NULL, &cUp);
+					AngleVectors(angNext, NULL, NULL, &nUp);
 
 					Ray_t ringRay;
-					ringRay.Init( center + cUp * flRadius,
-						center + nUp * flRadius );
+					ringRay.Init(center + cUp * flRadius,
+						center + nUp * flRadius);
 
 					float t = 0, s = 0;
-					IntersectRayWithRay( pickerRay, ringRay, t, s );
+					IntersectRayWithRay(pickerRay, ringRay, t, s);
 
 					Vector a = pickerRay.m_Start + pickerRay.m_Delta.Normalized() * t;
 					Vector b = ringRay.m_Start + ringRay.m_Delta.Normalized() * s;
 
-					float flDist = ( a - b ).LengthSqr();
+					float flDist = (a - b).LengthSqr();
 					float flStepLengthSqr = ringRay.m_Delta.LengthSqr();
 
-					if ( flDist < flBestDist &&
-						flDist < flMaxDist && 
+					if (flDist < flBestDist &&
+						flDist < flMaxDist &&
 						s * s < flStepLengthSqr &&
-						t > 0 && t < (flBestViewDist-7) )
+						t > 0 && t < (flBestViewDist - 7))
 					{
 						flBestDist = flDist;
 						flBestViewDist = t;
 
-						idealAxis = (EDITOR_SELECTEDAXIS)(EDITORAXIS_FIRST + iDir);
+						idealAxis = (EDITOR_SELECTEDAXIS)(EDITORAXIS_FIRST_ROTATION + i);
 					}
 
 					angCur = angNext;
+				}
+			}
+		}
+		break;
+	case EDITORINTERACTION_UNIVERSAL:
+		{
+			// Repeated code from above, just copy-pasted for now
+			const float flBoxLength = 24.0f + 1.0f;
+			const float flBoxThick = 1.0f;
+
+			const int iSubDiv = 32.0f;
+			const float flRadius = 32.0f;
+			const float flMaxDist = 1.0f;
+			const float flRotationStep = 360.0f / iSubDiv;
+
+			float flBestViewDist = MAX_TRACE_LENGTH;
+
+			Vector reinterpretRoll[3];
+
+			AngleVectors(orientation,
+				&reinterpretRoll[0], &reinterpretRoll[1], &reinterpretRoll[2]);
+
+			QAngle angCur, angNext;
+			int iLookup[3][2] = {
+				{ 1, 2 },
+				{ 2, 1 },
+				{ 0, 2 },
+			};
+
+			Vector boxes[3][2] = {
+				{ Vector(1.0f, -flBoxThick, -flBoxThick),
+						Vector(flBoxLength, flBoxThick, flBoxThick) },
+				{ Vector(-flBoxThick, 1.0f, -flBoxThick),
+						Vector(flBoxThick, flBoxLength, flBoxThick) },
+				{ Vector(-flBoxThick, -flBoxThick, 1.0f),
+						Vector(flBoxThick, flBoxThick, flBoxLength) },
+			};
+
+			float flLastFrac = MAX_TRACE_LENGTH;
+			float flBestDist = MAX_TRACE_LENGTH;
+
+			for (int i = 0; i < 3; i++)
+			{
+				CBaseTrace trace;
+				if (IntersectRayWithBox(pickerRay,
+					center + boxes[i][0], center + boxes[i][1],
+					0.5f, &trace))
+				{
+					if (trace.fraction > flLastFrac)
+						continue;
+
+					flLastFrac = trace.fraction;
+					idealAxis = (EDITOR_SELECTEDAXIS)(EDITORAXIS_FIRST + i);
+				}
+
+				VectorAngles(reinterpretRoll[iLookup[i][0]],
+					reinterpretRoll[iLookup[i][1]],
+					angCur);
+				angNext = angCur;
+
+				for (int iStep = 0; iStep < iSubDiv; iStep++)
+				{
+					angNext.z += flRotationStep;
+
+					Vector cUp, nUp;
+
+					AngleVectors(angCur, NULL, NULL, &cUp);
+					AngleVectors(angNext, NULL, NULL, &nUp);
+
+					Ray_t ringRay;
+					ringRay.Init(center + cUp * flRadius,
+						center + nUp * flRadius);
+
+					float t = 0, s = 0;
+					IntersectRayWithRay(pickerRay, ringRay, t, s);
+
+					Vector a = pickerRay.m_Start + pickerRay.m_Delta.Normalized() * t;
+					Vector b = ringRay.m_Start + ringRay.m_Delta.Normalized() * s;
+
+					float flDist = (a - b).LengthSqr();
+					float flStepLengthSqr = ringRay.m_Delta.LengthSqr();
+
+					if (flDist < flBestDist &&
+						flDist < flMaxDist &&
+						s * s < flStepLengthSqr &&
+						t > 0 && t < (flBestViewDist - 7))
+					{
+						flBestDist = flDist;
+						flBestViewDist = t;
+
+						idealAxis = (EDITOR_SELECTEDAXIS)(EDITORAXIS_FIRST_ROTATION + i);
+					}
+
+					angCur = angNext;
+				}
+			}
+
+			if (idealAxis == EDITORAXIS_SCREEN)
+			{
+				const float flPlaneSize = 1.0f + 12.0f;
+
+				Vector planes[3][2] = {
+					{ Vector(0, 0, -1), Vector(flPlaneSize, flPlaneSize, 1) },
+					{ Vector(0, -1, 0), Vector(flPlaneSize, 1, flPlaneSize) },
+					{ Vector(-1, 0, 0), Vector(1, flPlaneSize, flPlaneSize) },
+				};
+
+				for (int i = 0; i < 3; i++)
+				{
+					CBaseTrace trace;
+					if (IntersectRayWithBox(pickerRay,
+						center + planes[i][0], center + planes[i][1],
+						0.5f, &trace))
+					{
+						if (trace.fraction > flLastFrac)
+							continue;
+
+						flLastFrac = trace.fraction;
+						idealAxis = (EDITOR_SELECTEDAXIS)(EDITORAXIS_FIRST_PLANE + i);
+					}
 				}
 			}
 		}

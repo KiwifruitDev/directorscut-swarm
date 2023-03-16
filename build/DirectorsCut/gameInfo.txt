@@ -1,0 +1,26 @@
+"GameInfo"
+{
+	"game"		"Director's Cut"
+	"title"		"    "	// asw - leave this blank as we have a texture logo
+	"type"		"singleplayer_only"
+	GameData	"directorscut.fgd"
+	InstancePath "tilegen/instances/"
+	
+	SupportsDX8     0
+	
+	"FileSystem"
+	{
+		"SteamAppId"	"2158680"
+		"ToolsAppId"	"2158680"
+		
+		"SearchPaths"
+		{
+
+			"Game"	"|gameinfo_path|."
+			"Game"	"swarm_deferred"
+			"Game"	"swarm"
+			"Game"	"swarm_base"
+			"Game"	"platform"
+		}
+	}
+}

@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2008, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2008, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Transition presentation.
 //
@@ -44,7 +44,7 @@ void CTransitionScreen::ApplySchemeSettings( vgui::IScheme *pScheme )
 	surface()->GetScreenSize( screenWide, screenTall );
 
 	char filename[MAX_PATH];
-	V_snprintf( filename, sizeof( filename ), "console/background01" ); // TODO: engine->GetStartupImage( filename, sizeof( filename ), screenWide, screenTall );
+	V_snprintf( filename, sizeof( filename ), "console/dxbackground" ); // TODO: engine->GetStartupImage( filename, sizeof( filename ), screenWide, screenTall );
 	m_iImageID = surface()->CreateNewTextureID();
 	surface()->DrawSetTextureFile( m_iImageID, filename, true, false );
 

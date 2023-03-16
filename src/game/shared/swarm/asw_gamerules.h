@@ -1,4 +1,4 @@
-//====== Copyright © 1996-2003, Valve Corporation, All rights reserved. =======
+//====== Copyright ï¿½ 1996-2003, Valve Corporation, All rights reserved. =======
 //
 // Purpose: Game rules for Alien Swarm
 //
@@ -102,7 +102,7 @@ public:
 	
 	virtual void			Precache( void );
 	virtual void			Think( void );
-	virtual const char *GetGameDescription( void ) { return "Alien Swarm"; }
+	virtual const char *GetGameDescription( void ) { return "Director's Cut"; }
 	virtual void			OnServerHibernating();
 	
 	// briefing roster functions

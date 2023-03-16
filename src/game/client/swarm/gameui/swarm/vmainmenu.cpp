@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2008, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2008, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -103,17 +103,9 @@ void MainMenu::OnCommand( const char *command )
 
 	bool bOpeningFlyout = false;
 
-	if ( !Q_stricmp( command, "FlmRunA" ) )
+	if ( !Q_stricmp( command, "FlmDX" ) )
 	{
-		engine->ClientCmd( "map test" );
-	}
-	else if ( !Q_stricmp( command, "FlmRunB" ) )
-	{
-		engine->ClientCmd( "map test_cookies" );
-	}
-	else if ( !Q_stricmp( command, "FlmRunC" ) )
-	{
-		engine->ClientCmd( "map test_volumetrics" );
+		engine->ClientCmd( "dx_imgui_show 2" );
 	}
 	else if ( !Q_stricmp( command, "commandConsole" ) )
 	{

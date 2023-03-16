@@ -13,6 +13,9 @@
 
 using namespace vgui;
 
+ConVar deferred_lighteditor_show( "deferred_lighteditor_show", "0", FCVAR_ARCHIVE, "Show the light editor" );
+ConVar deferred_lighteditor_operation( "deferred_lighteditor_operation", "0", FCVAR_ARCHIVE, "Light editor operation mode" );
+
 class CVGUILightEditor : public Panel
 {
 	DECLARE_CLASS_SIMPLE( CVGUILightEditor, Panel );
@@ -26,6 +29,9 @@ public:
 	static VPANEL GetEditorPanel();
 
 	~CVGUILightEditor();
+
+	static CUtlReference< CVGUILightEditor > m_refInstance;
+	CVGUILightEditor_Controls* m_pMainControls;
 
 protected:
 	void ApplySchemeSettings( IScheme *scheme );
@@ -60,7 +66,6 @@ private:
 	void StopDrag();
 	void GetDragBounds( int *pi2_min, int *pi2_max );
 
-	static CUtlReference< CVGUILightEditor > m_refInstance;
 	CVGUILightEditor( VPANEL pParent );
 
 	CLightingEditor *m_pEditorSystem;
@@ -91,7 +96,6 @@ private:
 #if DEFCG_LIGHTEDITOR_ALTERNATESETUP
 	MenuBar*	m_pMenuBar;
 #else
-	CVGUILightEditor_Controls *m_pMainControls;
 #endif
 	KeyValues *m_pCurrentProperties;
 
@@ -321,12 +325,30 @@ void CVGUILightEditor::OnMousePressed( MouseCode code )
 			break;
 		case CLightingEditor::EDITORINTERACTION_ROTATE:
 			{
-				if ( m_pEditorSystem->GetCurrentSelectedAxis() != CLightingEditor::EDITORAXIS_NONE )
+				if ( m_pEditorSystem->GetCurrentSelectedAxis() >= CLightingEditor::EDITORAXIS_FIRST_ROTATION
+					&& m_pEditorSystem->GetCurrentSelectedAxis() < CLightingEditor::EDITORAXIS_FIRST_PLANE )
 				{
-					Assert( m_pEditorSystem->GetCurrentSelectedAxis() < CLightingEditor::EDITORAXIS_FIRST_PLANE );
 					StartDrag( EDITORDRAG_ROTATE );
 					m_vecLastDragWorldPos = GetDragWorldPos( mx, my );
 					m_pEditorSystem->SetSelectionCenterLocked( true );
+				}
+			}
+			break;
+		case CLightingEditor::EDITORINTERACTION_UNIVERSAL:
+			{
+				if ( m_pEditorSystem->GetCurrentSelectedAxis() != CLightingEditor::EDITORAXIS_NONE )
+				{
+					if ( m_pEditorSystem->GetCurrentSelectedAxis() >= CLightingEditor::EDITORAXIS_FIRST_ROTATION
+						&& m_pEditorSystem->GetCurrentSelectedAxis() < CLightingEditor::EDITORAXIS_FIRST_PLANE )
+					{
+						StartDrag( EDITORDRAG_ROTATE );
+						m_pEditorSystem->SetSelectionCenterLocked( false );
+					}
+					else
+					{
+						StartDrag( EDITORDRAG_TRANSLATE );
+					}
+					m_vecLastDragWorldPos = GetDragWorldPos( mx, my );
 				}
 			}
 			break;
@@ -466,7 +488,7 @@ Vector CVGUILightEditor::GetDragWorldPos( int x, int y )
 			AngleVectors( orientation,
 				&normals[2], &normals[0], &normals[1] );
 
-			int iAxis = axis - CLightingEditor::EDITORAXIS_FIRST;
+			int iAxis = axis - CLightingEditor::EDITORAXIS_FIRST_ROTATION;
 
 			Assert( iAxis >= 0 && iAxis < 4 );
 
@@ -569,69 +591,68 @@ void CVGUILightEditor::OnCursorMoved_Internal( int &x, int &y )
 		}
 		break;
 	case EDITORDRAG_TRANSLATE:
+		{
+			Vector vecCurrentDragPos = GetDragWorldPos(x, y);
+			Vector vecMove = vecCurrentDragPos - m_vecLastDragWorldPos;
+			m_pEditorSystem->MoveSelectedLights(vecMove);
+			m_vecLastDragWorldPos = vecCurrentDragPos;
+		}
+		break;
 	case EDITORDRAG_ROTATE:
 		{
 			Vector vecCurrentDragPos = GetDragWorldPos( x, y );
 
-			if ( m_iDragMode == EDITORDRAG_TRANSLATE )
-			{
-				Vector vecMove = vecCurrentDragPos - m_vecLastDragWorldPos;
-				m_pEditorSystem->MoveSelectedLights( vecMove );
-			}
-			else
-			{
-				Vector center = m_pEditorSystem->GetSelectionCenter();
-				QAngle orientation = m_pEditorSystem->GetSelectionOrientation();
+			Vector center = m_pEditorSystem->GetSelectionCenter();
+			QAngle orientation = m_pEditorSystem->GetSelectionOrientation();
 
-				CLightingEditor::EDITOR_SELECTEDAXIS axis = m_pEditorSystem->GetCurrentSelectedAxis();
-				Assert( axis >= CLightingEditor::EDITORAXIS_FIRST && axis < CLightingEditor::EDITORAXIS_FIRST_PLANE );
+			CLightingEditor::EDITOR_SELECTEDAXIS axis = m_pEditorSystem->GetCurrentSelectedAxis();
+			Assert( axis >= CLightingEditor::EDITORAXIS_FIRST_ROTATION && axis < CLightingEditor::EDITORAXIS_FIRST_PLANE );
 
-				int iAxis = axis - CLightingEditor::EDITORAXIS_FIRST;
-				Assert( iAxis >= 0 && iAxis < 4 );
+			int iAxis = axis - CLightingEditor::EDITORAXIS_FIRST_ROTATION;
+			Assert( iAxis >= 0 && iAxis < 4 );
 
-				Vector vDirections[6];
-				AngleVectors( orientation,
-					&vDirections[0], &vDirections[1], &vDirections[2] );
+			Vector vDirections[6];
+			AngleVectors( orientation,
+				&vDirections[0], &vDirections[1], &vDirections[2] );
 
-				Vector vecViewCenter = center - m_pEditorSystem->GetViewOrigin();
-				vecViewCenter.NormalizeInPlace();
+			Vector vecViewCenter = center - m_pEditorSystem->GetViewOrigin();
+			vecViewCenter.NormalizeInPlace();
 
-				VectorVectors( vecViewCenter, vDirections[3], vDirections[4] );
-				vDirections[5] = vecViewCenter;
+			VectorVectors( vecViewCenter, vDirections[3], vDirections[4] );
+			vDirections[5] = vecViewCenter;
 
-				int iDirIndices[4][3] = {
-					{ 2, 0, 1 },
-					{ 0, 1, 2 },
-					{ 1, 2, 0 },
-					{ 3, 4, 5 },
-				};
+			int iDirIndices[4][3] = {
+				{ 2, 0, 1 },
+				{ 0, 1, 2 },
+				{ 1, 2, 0 },
+				{ 3, 4, 5 },
+			};
 
-				Vector vecDelta[2] = {
-					m_vecLastDragWorldPos - center,
-					vecCurrentDragPos - center,
-				};
+			Vector vecDelta[2] = {
+				m_vecLastDragWorldPos - center,
+				vecCurrentDragPos - center,
+			};
 
-				vecDelta[0].NormalizeInPlace();
-				vecDelta[1].NormalizeInPlace();
+			vecDelta[0].NormalizeInPlace();
+			vecDelta[1].NormalizeInPlace();
 
-				float flAngle[2] = {
-					atan2( DotProduct( vDirections[ iDirIndices[iAxis][0] ], vecDelta[0] ),
-						DotProduct( vDirections[ iDirIndices[iAxis][1] ], vecDelta[0] ) ),
-					atan2( DotProduct( vDirections[ iDirIndices[iAxis][0] ], vecDelta[1] ),
-						DotProduct( vDirections[ iDirIndices[iAxis][1] ], vecDelta[1] ) ),
-				};
+			float flAngle[2] = {
+				atan2( DotProduct( vDirections[ iDirIndices[iAxis][0] ], vecDelta[0] ),
+					DotProduct( vDirections[ iDirIndices[iAxis][1] ], vecDelta[0] ) ),
+				atan2( DotProduct( vDirections[ iDirIndices[iAxis][0] ], vecDelta[1] ),
+					DotProduct( vDirections[ iDirIndices[iAxis][1] ], vecDelta[1] ) ),
+			};
 
-				float flRotate = flAngle[1] - flAngle[0];
+			float flRotate = flAngle[1] - flAngle[0];
 
-				VMatrix matRotate;
-				matRotate.Identity();
+			VMatrix matRotate;
+			matRotate.Identity();
 
-				MatrixBuildRotationAboutAxis( matRotate,
-					vDirections[ iDirIndices[iAxis][2] ],
-					RAD2DEG( flRotate ) );
+			MatrixBuildRotationAboutAxis( matRotate,
+				vDirections[ iDirIndices[iAxis][2] ],
+				RAD2DEG( flRotate ) );
 
-				m_pEditorSystem->RotateSelectedLights( matRotate );
-			}
+			m_pEditorSystem->RotateSelectedLights( matRotate );
 
 			m_vecLastDragWorldPos = vecCurrentDragPos;
 		}
@@ -722,6 +743,9 @@ void CVGUILightEditor::OnKeyCodePressed_Internal( KeyCode code )
 		case KEY_B:
 			curMode = CLightingEditor::EDITORINTERACTION_ADD;
 			break;
+		case KEY_U:
+			curMode = CLightingEditor::EDITORINTERACTION_UNIVERSAL;
+			break;
 		case KEY_F5:
 			engine->ClientCmd( "clear; jpeg" );
 			break;
@@ -772,7 +796,8 @@ void CVGUILightEditor::OnKeyCodeReleased_Internal( KeyCode code )
 	if ( code == KEY_X ||
 		code == KEY_C ||
 		code == KEY_V ||
-		code == KEY_B )
+		code == KEY_B ||
+		code == KEY_U )
 	{
 		if ( ( gpGlobals->curtime - m_flLastInteractionTypeKeyPress ) > 0.2f )
 		{
@@ -801,6 +826,9 @@ bool CVGUILightEditor::ActivateEditorInteractionMode( CLightingEditor::EDITORINT
 	case CLightingEditor::EDITORINTERACTION_ROTATE:
 			pszTargetRadioButton = "action_rotate";
 		break;
+	case CLightingEditor::EDITORINTERACTION_UNIVERSAL:
+			pszTargetRadioButton = "action_universal";
+		break;
 	default:
 		break;
 	}
@@ -815,6 +843,7 @@ bool CVGUILightEditor::ActivateEditorInteractionMode( CLightingEditor::EDITORINT
 		{
 			pButton->SetSelected( true );
 			m_pEditorSystem->SetEditorInteractionMode( mode );
+			deferred_lighteditor_operation.SetValue( (int)mode );
 
 			return true;
 		}
@@ -823,7 +852,7 @@ bool CVGUILightEditor::ActivateEditorInteractionMode( CLightingEditor::EDITORINT
 #endif
 	}
 
-	return false;
+	return true; //false;
 }
 
 void CVGUILightEditor::OnPropertiesChanged_Light( KeyValues *pKV )
@@ -909,6 +938,7 @@ void CVGUILightEditor::OnThink()
 		KEY_C,
 		KEY_V,
 		KEY_B,
+		KEY_U,
 		KEY_F5,
 	};
 
@@ -989,6 +1019,8 @@ static class CLightEditorHelper : public CAutoGameSystemPerFrame
 			return;
 		}
 
+		/*
+
 		static bool bWasTabDown = false;
 		bool bIsTabDown = vgui::input()->IsKeyDown( KEY_TAB );
 
@@ -1002,6 +1034,60 @@ static class CLightEditorHelper : public CAutoGameSystemPerFrame
 				CVGUILightEditor::ToggleEditor();
 
 			bWasTabDown = bIsTabDown;
+		}
+		*/
+
+		if(deferred_lighteditor_show.GetBool())
+		{
+			if(!CVGUILightEditor::IsEditorVisible())
+				CVGUILightEditor::ToggleEditor();
+		}
+		else
+		{
+			if(CVGUILightEditor::IsEditorVisible())
+				CVGUILightEditor::ToggleEditor();
+		}
+
+		if ( CVGUILightEditor::IsEditorVisible() )
+		{
+			CLightingEditor* lightingEditor = GetLightingEditor();
+			CLightingEditor::EDITORINTERACTION_MODE operation = (CLightingEditor::EDITORINTERACTION_MODE)deferred_lighteditor_operation.GetInt();
+			if (operation != lightingEditor->GetEditorInteractionMode() && operation < CLightingEditor::EDITORINTERACTION_COUNT)
+			{
+				const char* pszTargetRadioButton = NULL;
+
+				switch (operation)
+				{
+				case CLightingEditor::EDITORINTERACTION_SELECT:
+					pszTargetRadioButton = "action_select";
+					break;
+				case CLightingEditor::EDITORINTERACTION_ADD:
+					pszTargetRadioButton = "action_add";
+					break;
+				case CLightingEditor::EDITORINTERACTION_TRANSLATE:
+					pszTargetRadioButton = "action_translate";
+					break;
+				case CLightingEditor::EDITORINTERACTION_ROTATE:
+					pszTargetRadioButton = "action_rotate";
+					break;
+				case CLightingEditor::EDITORINTERACTION_UNIVERSAL:
+					pszTargetRadioButton = "action_universal";
+					break;
+				default:
+					break;	
+				}
+
+				if (pszTargetRadioButton != NULL)
+				{
+					CVGUILightEditor* pPanel = CVGUILightEditor::m_refInstance.GetObject();
+					RadioButton* pButton = assert_cast<RadioButton*>(pPanel->m_pMainControls->FindChildByName(pszTargetRadioButton));
+					if (pButton != NULL)
+					{
+						pButton->SetSelected(true);
+						lightingEditor->SetEditorInteractionMode(operation);
+					}
+				}
+			}
 		}
 	};
 } __g_lightEditorHelper;

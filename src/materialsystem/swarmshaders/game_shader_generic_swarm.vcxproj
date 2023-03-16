@@ -20,23 +20,21 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v120_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v120_xp</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\modProps.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\modProps.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -54,12 +52,10 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <CustomBuildStep>
-      <Message>
-      </Message>
-      <Command>if exist "$(ProjectDir)..\..\..\build\$(modName)\bin\$(ProjectName).dll" attrib -r "$(ProjectDir)..\..\..\build\$(modName)\bin\$(ProjectName).dll"
-copy "$(TargetDir)$(ProjectName).dll" "$(ProjectDir)..\..\..\build\$(modName)\bin"
-if exist "$(TargetDir)$(ProjectName).map" copy "$(TargetDir)"$(ProjectName).map "$(ProjectDir)..\..\..\build\$(modName)\bin\$(ProjectName).map"</Command>
-      <Outputs>$(TargetDir)..\..\..\..\..\build\$(modName)\bin\$(ProjectName).dll;$(TargetDir)..\..\..\..\..\build\$(modName)\bin\$(ProjectName).map;%(Outputs)</Outputs>
+      <Command>
+      </Command>
+      <Outputs>
+      </Outputs>
       <Inputs>
       </Inputs>
     </CustomBuildStep>
@@ -68,7 +64,7 @@ if exist "$(TargetDir)$(ProjectName).map" copy "$(TargetDir)"$(ProjectName).map 
       <AdditionalIncludeDirectories>..\..\common;..\..\public;..\..\public\tier0;..\..\public\tier1;fxctmp9;vshtmp9;..\..\dx9sdk\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WIN32;_DEBUG;DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;STDSHADER_DX9_DLL_EXPORT;FAST_MATERIALVAR_ACCESS;COMPILER_MSVC;COMPILER_MSVC32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
-      <MinimalRebuild>false</MinimalRebuild>
+      <MinimalRebuild>true</MinimalRebuild>
       <ExceptionHandling>
       </ExceptionHandling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -90,7 +86,7 @@ if exist "$(TargetDir)$(ProjectName).map" copy "$(TargetDir)"$(ProjectName).map 
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <CompileAs>CompileAsCpp</CompileAs>
       <ErrorReporting>Prompt</ErrorReporting>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MultiProcessorCompilation>false</MultiProcessorCompilation>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -112,7 +108,6 @@ if exist "$(TargetDir)$(ProjectName).map" copy "$(TargetDir)"$(ProjectName).map 
       </BaseAddress>
       <TargetMachine>MachineX86</TargetMachine>
       <LinkErrorReporting>PromptImmediately</LinkErrorReporting>
-      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <Manifest>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -124,15 +119,19 @@ if exist "$(TargetDir)$(ProjectName).map" copy "$(TargetDir)"$(ProjectName).map 
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <OutputFile>$(OutDir)stdshader_dx9.bsc</OutputFile>
     </Bscmake>
+    <PostBuildEvent>
+      <Command>copy "$(TargetPath)" "$(SolutionDir)..\build\DirectorsCut\bin"</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copying SHADER DLL to mod</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <CustomBuildStep>
-      <Message>
-      </Message>
-      <Command>if exist "$(ProjectDir)..\..\..\build\$(modName)\bin\$(ProjectName).dll" attrib -r "$(ProjectDir)..\..\..\build\$(modName)\bin\$(ProjectName).dll"
-copy "$(TargetDir)$(ProjectName).dll" "$(ProjectDir)..\..\..\build\$(modName)\bin"
-if exist "$(TargetDir)$(ProjectName).map" copy "$(TargetDir)"$(ProjectName).map "$(ProjectDir)..\..\..\build\$(modName)\bin\$(ProjectName).map"</Command>
-      <Outputs>$(TargetDir)..\..\..\..\..\build\$(modName)\bin\$(ProjectName).dll;$(TargetDir)..\..\..\..\..\build\$(modName)\bin\$(ProjectName).map;%(Outputs)</Outputs>
+      <Command>
+      </Command>
+      <Outputs>
+      </Outputs>
       <Inputs>
       </Inputs>
     </CustomBuildStep>
@@ -189,7 +188,6 @@ if exist "$(TargetDir)$(ProjectName).map" copy "$(TargetDir)"$(ProjectName).map 
       </BaseAddress>
       <TargetMachine>MachineX86</TargetMachine>
       <LinkErrorReporting>PromptImmediately</LinkErrorReporting>
-      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <Manifest>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -201,6 +199,12 @@ if exist "$(TargetDir)$(ProjectName).map" copy "$(TargetDir)"$(ProjectName).map 
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <OutputFile>$(OutDir)stdshader_dx9.bsc</OutputFile>
     </Bscmake>
+    <PostBuildEvent>
+      <Command>copy "$(TargetPath)" "$(SolutionDir)..\build\DirectorsCut\bin"</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copying SHADER DLL to mod</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BaseVSShader.cpp" />
@@ -228,6 +232,7 @@ if exist "$(TargetDir)$(ProjectName).map" copy "$(TargetDir)"$(ProjectName).map 
     <ClCompile Include="screenspace_shading.cpp" />
     <ClCompile Include="volume_blend.cpp" />
     <ClCompile Include="volume_prepass.cpp" />
+    <ClCompile Include="pbr_dx9.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseVSShader.h" />
@@ -253,6 +258,7 @@ if exist "$(TargetDir)$(ProjectName).map" copy "$(TargetDir)"$(ProjectName).map 
     <ClInclude Include="lighting_helper.h" />
     <ClInclude Include="lighting_pass_basic.h" />
     <ClInclude Include="lighting_pass_volum.h" />
+    <ClInclude Include="pbr_common_ps2_3_x.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\..\dx9sdk\lib\d3dx9.lib" />
